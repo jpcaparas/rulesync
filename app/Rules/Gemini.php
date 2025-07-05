@@ -18,4 +18,9 @@ class Gemini implements RuleInterface
     {
         return 'GEMINI.md';
     }
+
+    public function gitignorePath(): string
+    {
+        return 'GEMINI.md';
+    }
 }

@@ -66,6 +66,7 @@ composer require --dev jpcaparas/rulesync
 
 - `rulesync rules:list` - Show available AI assistants
 - `rulesync generate` - Generate rule files from rulesync.md
+- `rulesync gitignore:generate` - Add AI assistant rule files to .gitignore
 - `rulesync config` - View current configuration
 - `rulesync disable <name>` - Disable specific AI assistant
 - `rulesync enable <name>` - Enable specific AI assistant

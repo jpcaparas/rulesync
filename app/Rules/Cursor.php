@@ -18,4 +18,9 @@ class Cursor implements RuleInterface
     {
         return '.cursorrules';
     }
+
+    public function gitignorePath(): string
+    {
+        return '.cursorrules';
+    }
 }

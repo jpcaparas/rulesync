@@ -9,4 +9,6 @@ interface RuleInterface
     public function shortcode(): string;
 
     public function path(): string;
+
+    public function gitignorePath(): string;
 }

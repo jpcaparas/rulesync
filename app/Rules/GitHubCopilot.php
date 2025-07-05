@@ -18,4 +18,9 @@ class GitHubCopilot implements RuleInterface
     {
         return '.github/copilot-instructions.md';
     }
+
+    public function gitignorePath(): string
+    {
+        return '.github/copilot-instructions.md';
+    }
 }

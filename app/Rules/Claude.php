@@ -18,4 +18,9 @@ class Claude implements RuleInterface
     {
         return 'CLAUDE.md';
     }
+
+    public function gitignorePath(): string
+    {
+        return 'CLAUDE.md';
+    }
 }
