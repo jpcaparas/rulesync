@@ -103,15 +103,7 @@ class GenerateCommand extends Command
             }
         }
 
-        $this->error('No source file found. Create a rulesync.md file or use --from option.');
-
-        if ($configService->isLocalProject()) {
-            $this->line('For local projects, create: <comment>rulesync.md</comment>');
-        } else {
-            $this->line('For global usage, create: <comment>~/.config/rulesync/rulesync.md</comment>');
-        }
-
-        return null;
+        return $this->handleMissingSourceFile($configService);
     }
 
     private function getSourceContent(string $sourceFile): ?string
@@ -230,5 +222,79 @@ class GenerateCommand extends Command
     private function isUnderVersionControl(): bool
     {
         return File::exists(getcwd() . '/.git');
+    }
+
+    private function handleMissingSourceFile(ConfigService $configService): ?string
+    {
+        $this->error('No source file found.');
+
+        $existingRuleFiles = $this->findExistingRuleFiles();
+
+        if (!empty($existingRuleFiles)) {
+            $this->line('');
+            $this->line('Found existing rule files that could be used as templates:');
+            
+            foreach ($existingRuleFiles as $index => $ruleFile) {
+                $this->line("  <comment>[{$index}]</comment> {$ruleFile['path']} ({$ruleFile['name']})");
+            }
+            
+            $this->line('');
+            
+            if ($this->confirm('Would you like to use one of these as a template for rulesync.md?')) {
+                $choice = $this->ask('Enter the number of the file to use as template');
+                
+                if (isset($existingRuleFiles[$choice])) {
+                    return $this->createRulesyncFromTemplate($configService, $existingRuleFiles[$choice]);
+                } else {
+                    $this->error("Invalid choice: {$choice}");
+                }
+            }
+        }
+
+        $this->line('');
+        $this->line('You must create a rulesync.md file or use the --from option.');
+        
+        if ($configService->isLocalProject()) {
+            $this->line('For local projects, create: <comment>rulesync.md</comment>');
+        } else {
+            $this->line('For global usage, create: <comment>~/.config/rulesync/rulesync.md</comment>');
+        }
+
+        return null;
+    }
+
+    private function findExistingRuleFiles(): array
+    {
+        $ruleFiles = [];
+        $rules = app(RuleDiscoveryService::class)->getRules();
+
+        foreach ($rules as $index => $rule) {
+            $path = $rule->path();
+            
+            if (File::exists($path) && !empty(trim(File::get($path)))) {
+                $ruleFiles[$index] = [
+                    'name' => $rule->name(),
+                    'path' => $path,
+                    'rule' => $rule
+                ];
+            }
+        }
+
+        return $ruleFiles;
+    }
+
+    private function createRulesyncFromTemplate(ConfigService $configService, array $templateFile): string
+    {
+        $templateContent = File::get($templateFile['path']);
+        
+        $rulesyncPath = $configService->isLocalProject() 
+            ? getcwd() . '/rulesync.md'
+            : $configService->getRulesDirectory() . '/rulesync.md';
+
+        File::put($rulesyncPath, $templateContent);
+        
+        $this->info("Created rulesync.md using {$templateFile['name']} as template: {$rulesyncPath}");
+        
+        return $rulesyncPath;
     }
 }
