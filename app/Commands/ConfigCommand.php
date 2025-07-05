@@ -45,6 +45,15 @@ class ConfigCommand extends Command
             $this->line('<comment>Base rules:</comment> <fg=yellow>Not set</fg=yellow>');
         }
 
+        $this->line('');
+
+        if (isset($config['augment'])) {
+            $augmentStatus = $config['augment'] ? '<fg=green>Yes</fg=green>' : '<fg=red>No</fg=red>';
+            $this->line('<comment>Augment local + global rules:</comment> '.$augmentStatus);
+        } else {
+            $this->line('<comment>Augment local + global rules:</comment> <fg=yellow>Not set (will prompt)</fg=yellow>');
+        }
+
         return self::SUCCESS;
     }
 }

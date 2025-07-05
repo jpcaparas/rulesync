@@ -79,6 +79,21 @@ class ConfigService
         return $this->config;
     }
 
+    public function getAugmentPreference(): ?bool
+    {
+        if (! isset($this->config['augment'])) {
+            return null;
+        }
+
+        return $this->config['augment'];
+    }
+
+    public function setAugmentPreference(bool $augment): void
+    {
+        $this->config['augment'] = $augment;
+        $this->saveConfig();
+    }
+
     private function ensureConfigDirectoryExists(): void
     {
         $directory = dirname($this->configPath);

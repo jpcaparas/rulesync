@@ -92,15 +92,24 @@ class GenerateCommand extends Command
             return $customSource;
         }
 
-        $possibleSources = [
-            getcwd().'/rulesync.md',
-            $configService->getRulesDirectory().'/rulesync.md',
-        ];
+        $localRulesFile = getcwd().'/rulesync.md';
+        $globalRulesFile = $_SERVER['HOME'].'/.config/rulesync/rulesync.md';
 
-        foreach ($possibleSources as $source) {
-            if (File::exists($source)) {
-                return $source;
-            }
+        $localExists = File::exists($localRulesFile);
+        $globalExists = File::exists($globalRulesFile);
+
+        // If both local and global files exist, handle augmentation
+        if ($localExists && $globalExists && $localRulesFile !== $globalRulesFile) {
+            return $this->handleAugmentation($configService, $localRulesFile, $globalRulesFile);
+        }
+
+        // Original logic - prefer local over global
+        if ($localExists) {
+            return $localRulesFile;
+        }
+
+        if ($globalExists) {
+            return $globalRulesFile;
         }
 
         return $this->handleMissingSourceFile($configService);
@@ -221,7 +230,7 @@ class GenerateCommand extends Command
 
     private function isUnderVersionControl(): bool
     {
-        return File::exists(getcwd() . '/.git');
+        return File::exists(getcwd().'/.git');
     }
 
     private function handleMissingSourceFile(ConfigService $configService): ?string
@@ -230,19 +239,19 @@ class GenerateCommand extends Command
 
         $existingRuleFiles = $this->findExistingRuleFiles();
 
-        if (!empty($existingRuleFiles)) {
+        if (! empty($existingRuleFiles)) {
             $this->line('');
             $this->line('Found existing rule files that could be used as templates:');
-            
+
             foreach ($existingRuleFiles as $index => $ruleFile) {
                 $this->line("  <comment>[{$index}]</comment> {$ruleFile['path']} ({$ruleFile['name']})");
             }
-            
+
             $this->line('');
-            
+
             if ($this->confirm('Would you like to use one of these as a template for rulesync.md?')) {
                 $choice = $this->ask('Enter the number of the file to use as template');
-                
+
                 if (isset($existingRuleFiles[$choice])) {
                     return $this->createRulesyncFromTemplate($configService, $existingRuleFiles[$choice]);
                 } else {
@@ -253,7 +262,7 @@ class GenerateCommand extends Command
 
         $this->line('');
         $this->line('You must create a rulesync.md file or use the --from option.');
-        
+
         if ($configService->isLocalProject()) {
             $this->line('For local projects, create: <comment>rulesync.md</comment>');
         } else {
@@ -270,12 +279,12 @@ class GenerateCommand extends Command
 
         foreach ($rules as $index => $rule) {
             $path = $rule->path();
-            
-            if (File::exists($path) && !empty(trim(File::get($path)))) {
+
+            if (File::exists($path) && ! empty(trim(File::get($path)))) {
                 $ruleFiles[$index] = [
                     'name' => $rule->name(),
                     'path' => $path,
-                    'rule' => $rule
+                    'rule' => $rule,
                 ];
             }
         }
@@ -283,18 +292,73 @@ class GenerateCommand extends Command
         return $ruleFiles;
     }
 
+    private function handleAugmentation(ConfigService $configService, string $localFile, string $globalFile): string
+    {
+        // Check if user has set a preference for augmentation
+        $augmentPreference = $configService->getAugmentPreference();
+
+        if ($augmentPreference === null) {
+            $this->line('');
+            $this->line('<info>Found both local and global rulesync.md files:</info>');
+            $this->line("  Local:  {$localFile}");
+            $this->line("  Global: {$globalFile}");
+            $this->line('');
+
+            $shouldAugment = $this->confirm('Would you like to combine both files? (Local rules first, then global rules)');
+
+            if ($shouldAugment) {
+                $savePreference = $this->confirm('Save this preference for future generate calls in this directory?');
+                if ($savePreference) {
+                    $configService->setAugmentPreference(true);
+                }
+            } else {
+                $savePreference = $this->confirm('Save this preference (use local only) for future generate calls in this directory?');
+                if ($savePreference) {
+                    $configService->setAugmentPreference(false);
+                }
+            }
+        } else {
+            $shouldAugment = $augmentPreference;
+        }
+
+        if ($shouldAugment) {
+            return $this->createAugmentedFile($localFile, $globalFile);
+        }
+
+        return $localFile; // Use local file only
+    }
+
+    private function createAugmentedFile(string $localFile, string $globalFile): string
+    {
+        $localContent = File::get($localFile);
+        $globalContent = File::get($globalFile);
+
+        $augmentedContent = "# Project-specific rules\n\n"
+            .$localContent
+            ."\n\n---\n\n"
+            ."# General rules\n\n"
+            .$globalContent;
+
+        $tempFile = sys_get_temp_dir().'/rulesync_augmented_'.uniqid().'.md';
+        File::put($tempFile, $augmentedContent);
+
+        $this->line('<info>Using augmented rules (local + global)</info>');
+
+        return $tempFile;
+    }
+
     private function createRulesyncFromTemplate(ConfigService $configService, array $templateFile): string
     {
         $templateContent = File::get($templateFile['path']);
-        
-        $rulesyncPath = $configService->isLocalProject() 
-            ? getcwd() . '/rulesync.md'
-            : $configService->getRulesDirectory() . '/rulesync.md';
+
+        $rulesyncPath = $configService->isLocalProject()
+            ? getcwd().'/rulesync.md'
+            : $configService->getRulesDirectory().'/rulesync.md';
 
         File::put($rulesyncPath, $templateContent);
-        
+
         $this->info("Created rulesync.md using {$templateFile['name']} as template: {$rulesyncPath}");
-        
+
         return $rulesyncPath;
     }
 }
