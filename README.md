@@ -1,5 +1,7 @@
 # Rulesync
 
+https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72
+
 Synchronize AI assistant rules across multiple platforms with ease.
 
 ## Installation
