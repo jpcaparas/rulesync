@@ -1,8 +1,12 @@
 # Rulesync
 
-https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/10ba6115-1c60-4a22-b797-30b9d004cd71" width="250" />
+</p>
 
-Synchronize AI assistant rules across multiple platforms with ease.
+Synchronise AI assistant rules across multiple platforms with ease.
+
+https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72
 
 ## Installation
 
@@ -72,7 +76,7 @@ A: By default, Rulesync protects existing rule files by:
 - Prompting for confirmation when files exist and differ
 - Skipping files that already have identical content
 
-You can override this behavior with:
+You can override this behaviour with:
 - `--overwrite` - Force overwrite existing files
 - `--force` - Skip all prompts and force generation
 
