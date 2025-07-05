@@ -19,18 +19,39 @@ https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72
 
 ## Installation
 
-### As a Development Dependency
+Choose the method that works best for your workflow:
+
+### Option 1: Standalone Executable (Recommended)
+
+Download the pre-built executable - **no PHP or Composer required!**
 
 ```bash
-composer require --dev jpcaparas/rulesync
-./vendor/bin/rulesync --help
+# Download from GitHub releases
+curl -L -o rulesync https://github.com/jpcaparas/rulesync/releases/latest/download/rulesync
+chmod +x rulesync
+./rulesync --help
+
+# Optional: Add to PATH for global access
+sudo mv rulesync /usr/local/bin/
+rulesync --help
 ```
 
-### As a Global Tool
+### Option 2: Global Composer Binary
+
+Install globally via Composer (adds to your `$PATH` automatically):
 
 ```bash
 composer global require jpcaparas/rulesync
 rulesync --help
+```
+
+### Option 3: Development Dependency
+
+Add to your project's development dependencies:
+
+```bash
+composer require --dev jpcaparas/rulesync
+./vendor/bin/rulesync --help
 ```
 
 ## Quick Start
