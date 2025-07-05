@@ -16,6 +16,10 @@ class GenerateCommand extends Command
 
     public function handle(ConfigService $configService, RuleDiscoveryService $ruleDiscovery): int
     {
+        if (! $this->checkVcsAndConfirm()) {
+            return self::FAILURE;
+        }
+
         $sourceFile = $this->getSourceFile($configService);
 
         if (! $sourceFile) {
@@ -203,5 +207,28 @@ class GenerateCommand extends Command
     private function isUrl(string $path): bool
     {
         return filter_var($path, FILTER_VALIDATE_URL) !== false;
+    }
+
+    private function checkVcsAndConfirm(): bool
+    {
+        if ($this->option('force')) {
+            return true;
+        }
+
+        if ($this->isUnderVersionControl()) {
+            return true;
+        }
+
+        $this->warn('Warning: You are not in a version-controlled directory.');
+        $this->line('Generating rule files without version control may result in lost changes.');
+        $this->line('Consider initializing git with: <comment>git init</comment>');
+        $this->line('');
+
+        return $this->confirm('Do you want to continue anyway?');
+    }
+
+    private function isUnderVersionControl(): bool
+    {
+        return File::exists(getcwd() . '/.git');
     }
 }
