@@ -18,4 +18,9 @@ class Junie implements RuleInterface
     {
         return '.junie/guidelines.md';
     }
+
+    public function gitignorePath(): string
+    {
+        return '.junie/';
+    }
 }

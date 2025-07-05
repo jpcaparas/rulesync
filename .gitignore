@@ -14,3 +14,14 @@ composer.lock
 # Coverage
 coverage.xml
 coverage-html/
+
+# Begin powered by rulesync
+CLAUDE.md
+.clinerules/
+.cursorrules
+GEMINI.md
+.github/copilot-instructions.md
+.junie/
+AGENTS.md
+.windsurfrules
+# End powered by rulesync - https://github.com/jpcaparas/rulesync

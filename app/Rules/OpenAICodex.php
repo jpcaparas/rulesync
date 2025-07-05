@@ -18,4 +18,9 @@ class OpenAICodex implements RuleInterface
     {
         return 'AGENTS.md';
     }
+
+    public function gitignorePath(): string
+    {
+        return 'AGENTS.md';
+    }
 }

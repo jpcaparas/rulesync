@@ -18,4 +18,9 @@ class Cline implements RuleInterface
     {
         return '.clinerules/project.md';
     }
+
+    public function gitignorePath(): string
+    {
+        return '.clinerules/';
+    }
 }

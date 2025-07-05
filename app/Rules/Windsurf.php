@@ -18,4 +18,9 @@ class Windsurf implements RuleInterface
     {
         return '.windsurfrules';
     }
+
+    public function gitignorePath(): string
+    {
+        return '.windsurfrules';
+    }
 }
