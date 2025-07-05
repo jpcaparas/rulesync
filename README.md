@@ -90,6 +90,56 @@ A: Yes! The base rules system allows you to:
 
 Base rules are appended to your final rule files after local/global augmentation.
 
+## Building Standalone Executable
+
+You can build Rulesync as a standalone PHAR executable that doesn't require PHP or Composer on the target system.
+
+### Prerequisites
+
+Install Box globally:
+```bash
+composer global require humbug/box
+```
+
+### Build Commands
+
+**Basic build:**
+```bash
+php rulesync build
+```
+
+**Build with specific version:**
+```bash
+php rulesync build 1.0.0
+```
+
+**Create full release (with tests):**
+```bash
+php rulesync release 1.0.0
+```
+
+**Build with verbose output (for debugging):**
+```bash
+php rulesync build 1.0.0 --verbose
+```
+
+### Output
+
+The standalone executable is created at `builds/rulesync` and includes all dependencies. You can distribute this single file without requiring users to install PHP, Composer, or any dependencies.
+
+**Test the build:**
+```bash
+./builds/rulesync --version
+./builds/rulesync --help
+```
+
+### Notes
+
+- The version argument updates the version in `config/app.php` before building
+- Use `--verbose` flag to see detailed Box compilation output for debugging
+- The build process includes all dependencies (including dev dependencies) in the final PHAR
+- The `release` command runs tests, builds the PHAR, but no longer creates a tarball
+
 ## License
 
 MIT
