@@ -19,11 +19,13 @@ https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72
 
 ## Installation
 
+**Requirements:** PHP 8.2+ is required for all installation options.
+
 Choose the method that works best for your workflow:
 
 ### Option 1: Standalone Executable (Recommended)
 
-Download the pre-built executable - **no PHP or Composer required!**
+Download the pre-built executable - **no Composer required!**
 
 ```bash
 # Download from GitHub releases
@@ -122,7 +124,7 @@ Base rules are appended to your final rule files after local/global augmentation
 
 ## Building Standalone Executable
 
-You can build Rulesync as a standalone PHAR executable that doesn't require PHP or Composer on the target system.
+You can build Rulesync as a standalone PHAR executable that doesn't require Composer on the target system (PHP 8.2+ is still required).
 
 ### Prerequisites
 
@@ -155,7 +157,7 @@ php rulesync build 1.0.0 --verbose
 
 ### Output
 
-The standalone executable is created at `builds/rulesync` and includes all dependencies. You can distribute this single file without requiring users to install PHP, Composer, or any dependencies.
+The standalone executable is created at `builds/rulesync` and includes all dependencies. You can distribute this single file without requiring users to install Composer or manage dependencies (PHP 8.2+ is still required).
 
 **Test the build:**
 ```bash
