@@ -1,7 +1,7 @@
 # Rulesync
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/10ba6115-1c60-4a22-b797-30b9d004cd71" width="250" />
+    <img src="https://github.com/user-attachments/assets/307c2333-d2a0-449d-a5a8-50919e66746d" width="250" />
 </p>
 
 Synchronise AI assistant rules across multiple platforms with ease.
