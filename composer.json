@@ -1,6 +1,6 @@
 {
     "name": "jpcaparas/rulesync",
-    "description": "Synchronize AI assistant rules across multiple platforms",
+    "description": "Easily sync all of your favourite AI assistant configuration files ",
     "keywords": ["ai", "assistant", "rules", "synchronization", "claude", "gemini", "cursor", "windsurf", "github-copilot"],
     "homepage": "https://github.com/jpcaparas/rulesync",
     "type": "library",
