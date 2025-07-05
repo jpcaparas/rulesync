@@ -13,7 +13,7 @@
     </a>
 </p>
 
-Easily sync all of your favourite AI assistant configuration files (e.g. `.cursorrules`, `copilot-instructions.md`, `GEMINI.md`, `CLAUDE.md`).
+Easily sync all of your favourite AI instruction files (e.g. `.cursorrules`, `copilot-instructions.md`, `GEMINI.md`, `CLAUDE.md`, `AGENTS.md`, `.clinerules/project.md`).
 
 https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72
 
@@ -60,7 +60,7 @@ composer require --dev jpcaparas/rulesync
 
 1. Create a `rulesync.md` file with your rules
 2. Run `rulesync generate` to create all AI assistant rule files
-3. Your rules are now synced across Claude, Cursor, Windsurf, Gemini CLI, GitHub Copilot, and Junie!
+3. Your rules are now synced across Claude, Cursor, Windsurf, Gemini CLI, GitHub Copilot, OpenAI Codex, Cline, and Junie!
 
 ## Commands
 
@@ -74,10 +74,12 @@ composer require --dev jpcaparas/rulesync
 ## Supported AI Assistants
 
 - **Claude** → `CLAUDE.md`
+- **Cline** → `.clinerules/project.md`
 - **Cursor** → `.cursorrules`
 - **Gemini CLI** → `GEMINI.md`
 - **GitHub Copilot** → `.github/copilot-instructions.md`
 - **Junie** → `.junie/guidelines.md`
+- **OpenAI Codex** → `AGENTS.md`
 - **Windsurf** → `.windsurfrules`
 
 ## FAQ
