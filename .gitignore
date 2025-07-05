@@ -10,3 +10,7 @@ composer.lock
 /.vscode
 /.vagrant
 .phpunit.result.cache
+
+# Coverage
+coverage.xml
+coverage-html/

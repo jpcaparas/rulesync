@@ -51,4 +51,5 @@ jobs:
       if: matrix.php-version == '8.2'
       with:
         file: ./coverage.xml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
+        token: ${{ secrets.CODECOV_TOKEN }}
