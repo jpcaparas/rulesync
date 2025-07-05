@@ -22,11 +22,11 @@ rulesync --help
 
 1. Create a `rulesync.md` file with your rules
 2. Run `rulesync generate` to create all AI assistant rule files
-3. Your rules are now synced across Claude, Cursor, Windsurf, Gemini, and GitHub Copilot!
+3. Your rules are now synced across Claude, Cursor, Windsurf, Gemini CLI, GitHub Copilot, and Junie!
 
 ## Commands
 
-- `rulesync list` - Show available AI assistants
+- `rulesync rules:list` - Show available AI assistants
 - `rulesync generate` - Generate rule files from rulesync.md
 - `rulesync config` - View current configuration
 - `rulesync disable <name>` - Disable specific AI assistant
@@ -37,9 +37,10 @@ rulesync --help
 
 - **Claude** → `CLAUDE.md`
 - **Cursor** → `.cursorrules`
-- **Windsurf** → `.windsurf/rules.md`
-- **Gemini CLI** → `.gemini/instructions.md`
+- **Gemini CLI** → `GEMINI.md`
 - **GitHub Copilot** → `.github/copilot-instructions.md`
+- **Junie** → `.junie/guidelines.md`
+- **Windsurf** → `.windsurfrules`
 
 ## License
 
