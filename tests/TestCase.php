@@ -3,8 +3,8 @@
 namespace JPCaparas\Rulesync\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use JPCaparas\Rulesync\RulesyncServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

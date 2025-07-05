@@ -2,9 +2,9 @@
 
 namespace JPCaparas\Rulesync;
 
+use JPCaparas\Rulesync\Commands\RulesyncCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use JPCaparas\Rulesync\Commands\RulesyncCommand;
 
 class RulesyncServiceProvider extends PackageServiceProvider
 {
