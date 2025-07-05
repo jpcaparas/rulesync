@@ -41,18 +41,18 @@ class BuildCommand extends Command
         }
 
         $this->line('Running Box compile...');
-        
+
         $output = [];
         $returnVar = 0;
         exec($boxCommand.' 2>&1', $output, $returnVar);
-        
+
         if ($this->option('verbose')) {
             $this->line('Box output:');
             foreach ($output as $line) {
                 $this->line($line);
             }
         }
-        
+
         if ($returnVar === 0) {
             $this->info('✅ Build completed successfully!');
             $this->line('📦 Executable created at: builds/rulesync');
@@ -64,6 +64,7 @@ class BuildCommand extends Command
             foreach ($output as $line) {
                 $this->line($line);
             }
+
             return 1;
         }
 
