@@ -2,7 +2,6 @@
 
 namespace JPCaparas\Rulesync\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
 class ReleaseCommand extends Command
@@ -11,7 +10,7 @@ class ReleaseCommand extends Command
 
     protected $description = 'Build and prepare a release version';
 
-    public function handle()
+    public function handle(): int
     {
         $version = $this->argument('version');
 
@@ -21,9 +20,22 @@ class ReleaseCommand extends Command
             return 1;
         }
 
-        $this->info("Preparing release version {$version}...");
+        $this->info("Preparing release version $version...");
 
-        $this->line('1. Running tests...');
+        $this->line('1. Running code style checks...');
+        $pintResult = $this->task('Running Laravel Pint', function () {
+            exec('vendor/bin/pint --test 2>&1', $output, $returnVar);
+
+            return $returnVar === 0;
+        });
+
+        if (! $pintResult) {
+            $this->error('❌ Code style violations found. Run "vendor/bin/pint" to fix them.');
+
+            return 1;
+        }
+
+        $this->line('2. Running tests...');
         $testResult = $this->task('Running PHPUnit tests', function () {
             return exec('vendor/bin/pest 2>&1', $output, $returnVar) !== false && $returnVar === 0;
         });
@@ -34,7 +46,7 @@ class ReleaseCommand extends Command
             return 1;
         }
 
-        $this->line('2. Building PHAR...');
+        $this->line('3. Building PHAR...');
         $buildResult = $this->call('build', ['version' => $version]);
 
         if ($buildResult !== 0) {
@@ -43,19 +55,14 @@ class ReleaseCommand extends Command
             return 1;
         }
 
-        $this->info("✅ Release {$version} ready!");
+        $this->info("✅ Release $version ready!");
         $this->line('📦 Executable: builds/rulesync');
         $this->line('');
         $this->line('Next steps:');
         $this->line('1. Test the executable: ./builds/rulesync --version');
-        $this->line('2. Create a Git tag: git tag v'.$version);
-        $this->line('3. Push the tag: git push origin v'.$version);
+        $this->line("2. Create a Git tag: git tag v$version");
+        $this->line("3. Push the tag: git push origin v$version");
 
         return 0;
-    }
-
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
     }
 }

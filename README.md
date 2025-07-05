@@ -4,6 +4,15 @@
     <img src="https://github.com/user-attachments/assets/307c2333-d2a0-449d-a5a8-50919e66746d" width="250" />
 </p>
 
+<p align="center">
+    <a href="https://github.com/jpcaparas/rulesync/actions/workflows/tests.yml">
+        <img src="https://github.com/jpcaparas/rulesync/actions/workflows/tests.yml/badge.svg" alt="Tests">
+    </a>
+    <a href="https://codecov.io/gh/jpcaparas/rulesync">
+        <img src="https://codecov.io/gh/jpcaparas/rulesync/branch/main/graph/badge.svg" alt="Coverage">
+    </a>
+</p>
+
 Synchronise AI assistant rules across multiple platforms with ease.
 
 https://github.com/user-attachments/assets/98604814-c0aa-450a-83a4-be522c1e4d72

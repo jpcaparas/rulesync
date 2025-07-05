@@ -1,0 +1,41 @@
+name: Fix Code Style
+
+on:
+  push:
+    branches-ignore: [ main ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  pint:
+    runs-on: ubuntu-latest
+    name: Fix Code Style
+
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo, dom, filter, gd, iconv, json, mbstring
+        tools: composer:v2
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Run Laravel Pint
+      run: vendor/bin/pint
+
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'Fix code style with Laravel Pint'
+        file_pattern: '*.php'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

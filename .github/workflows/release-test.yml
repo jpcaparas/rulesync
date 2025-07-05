@@ -1,0 +1,70 @@
+name: Release Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to test (e.g., 1.0.0)'
+        required: true
+        default: '1.0.0'
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+
+jobs:
+  test-release:
+    runs-on: ubuntu-latest
+    name: Test Release Process
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, iconv, intl, pdo, dom, filter, gd, iconv, json, mbstring
+        tools: composer:v2
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Test release command
+      run: |
+        VERSION="${{ github.event.inputs.version || '1.0.0-test' }}"
+        echo "Testing release command with version: $VERSION"
+        php rulesync release "$VERSION"
+
+    - name: Verify build output
+      run: |
+        if [ ! -f "builds/rulesync" ]; then
+          echo "❌ Build output not found at builds/rulesync"
+          exit 1
+        fi
+        echo "✅ Build output verified"
+        ls -la builds/rulesync
+
+    - name: Test executable
+      run: |
+        chmod +x builds/rulesync
+        ./builds/rulesync --version
+        ./builds/rulesync rules:list
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: rulesync-build-${{ github.event.inputs.version || '1.0.0-test' }}
+        path: builds/rulesync
+        retention-days: 30
