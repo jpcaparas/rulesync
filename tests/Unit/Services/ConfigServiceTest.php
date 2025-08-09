@@ -141,6 +141,32 @@ class ConfigServiceTest extends TestCase
         expect($this->configService->getAugmentPreference())->toBeNull();
     }
 
+    public function test_can_set_warning_preferences(): void
+    {
+        // Test defaults
+        expect($this->configService->getWarnOnMissingGlobalRules())->toBeTrue();
+        expect($this->configService->getWarnOnMissingLocalRules())->toBeTrue();
+        expect($this->configService->getWarnOnMissingRules())->toBeTrue();
+
+        // Test setting to false
+        $this->configService->setWarnOnMissingGlobalRules(false);
+        $this->configService->setWarnOnMissingLocalRules(false);
+        $this->configService->setWarnOnMissingRules(false);
+
+        expect($this->configService->getWarnOnMissingGlobalRules())->toBeFalse();
+        expect($this->configService->getWarnOnMissingLocalRules())->toBeFalse();
+        expect($this->configService->getWarnOnMissingRules())->toBeFalse();
+
+        // Test setting back to true
+        $this->configService->setWarnOnMissingGlobalRules(true);
+        $this->configService->setWarnOnMissingLocalRules(true);
+        $this->configService->setWarnOnMissingRules(true);
+
+        expect($this->configService->getWarnOnMissingGlobalRules())->toBeTrue();
+        expect($this->configService->getWarnOnMissingLocalRules())->toBeTrue();
+        expect($this->configService->getWarnOnMissingRules())->toBeTrue();
+    }
+
     public function test_persists_config_to_file(): void
     {
         $this->configService->disableRule('claude');

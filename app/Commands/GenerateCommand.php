@@ -98,6 +98,28 @@ class GenerateCommand extends Command
         $localExists = File::exists($localRulesFile);
         $globalExists = File::exists($globalRulesFile);
 
+        if (! $localExists && ! $globalExists) {
+            return $this->handleMissingSourceFile($configService);
+        }
+
+        if (! $globalExists && $configService->getWarnOnMissingGlobalRules()) {
+            $this->line('');
+            $this->warn('No global rulesync.md file found at ~/.config/rulesync/rulesync.md');
+
+            if ($this->confirm('Do you want to hide this warning in the future?')) {
+                $configService->setWarnOnMissingGlobalRules(false);
+            }
+        }
+
+        if (! $localExists && $configService->getWarnOnMissingLocalRules()) {
+            $this->line('');
+            $this->warn('No local rulesync.md file found in the current directory.');
+
+            if ($this->confirm('Do you want to hide this warning in the future?')) {
+                $configService->setWarnOnMissingLocalRules(false);
+            }
+        }
+
         // If both local and global files exist, handle augmentation
         if ($localExists && $globalExists && $localRulesFile !== $globalRulesFile) {
             return $this->handleAugmentation($configService, $localRulesFile, $globalRulesFile);
@@ -112,6 +134,7 @@ class GenerateCommand extends Command
             return $globalRulesFile;
         }
 
+        // This part should not be reachable if the logic is correct, but as a fallback:
         return $this->handleMissingSourceFile($configService);
     }
 
@@ -235,6 +258,15 @@ class GenerateCommand extends Command
 
     private function handleMissingSourceFile(ConfigService $configService): ?string
     {
+        if ($configService->getWarnOnMissingRules()) {
+            $this->line('');
+            $this->warn('No rulesync.md file found globally or locally.');
+
+            if ($this->confirm('Do you want to hide this warning in the future?')) {
+                $configService->setWarnOnMissingRules(false);
+            }
+        }
+
         $this->error('No source file found.');
 
         $existingRuleFiles = $this->findExistingRuleFiles();

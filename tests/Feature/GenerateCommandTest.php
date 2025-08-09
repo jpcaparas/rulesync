@@ -36,7 +36,9 @@ class GenerateCommandTest extends TestCase
         File::ensureDirectoryExists($this->tempDir.'/.git');
         File::put($this->tempDir.'/.git/config', '');
 
-        $this->artisan('generate --force')
+        $this->artisan('generate')
+            ->expectsOutput('No rulesync.md file found globally or locally.')
+            ->expectsQuestion('Do you want to hide this warning in the future?', false)
             ->expectsOutputToContain('No source file found.')
             ->assertExitCode(1);
     }
@@ -104,5 +106,60 @@ class GenerateCommandTest extends TestCase
             ->expectsOutputToContain('Generating rule files...')
             ->expectsOutputToContain('Generation complete:')
             ->assertExitCode(0);
+    }
+
+    public function test_hides_missing_global_rules_warning_when_confirmed(): void
+    {
+        File::put($this->tempDir.'/rulesync.md', '# My Rules');
+        File::ensureDirectoryExists($this->tempDir.'/.git');
+        File::put($this->tempDir.'/.git/config', '');
+
+        // First run: expect warning and confirm to hide it
+        $this->artisan('generate')
+            ->expectsOutput('No global rulesync.md file found at ~/.config/rulesync/rulesync.md')
+            ->expectsQuestion('Do you want to hide this warning in the future?', true)
+            ->assertExitCode(0);
+
+        // Second run: expect no warning
+        $this->artisan('generate')
+            ->doesntExpectOutput('No global rulesync.md file found at ~/.config/rulesync/rulesync.md')
+            ->assertExitCode(0);
+    }
+
+    public function test_hides_missing_local_rules_warning_when_confirmed(): void
+    {
+        $globalConfigDir = $this->tempDir.'/.config/rulesync';
+        File::ensureDirectoryExists($globalConfigDir);
+        File::put($globalConfigDir.'/rulesync.md', '# Global Rules');
+        File::ensureDirectoryExists($this->tempDir.'/.git');
+        File::put($this->tempDir.'/.git/config', '');
+
+        // First run: expect warning and confirm to hide it
+        $this->artisan('generate')
+            ->expectsOutput('No local rulesync.md file found in the current directory.')
+            ->expectsQuestion('Do you want to hide this warning in the future?', true)
+            ->assertExitCode(0);
+
+        // Second run: expect no warning
+        $this->artisan('generate')
+            ->doesntExpectOutput('No local rulesync.md file found in the current directory.')
+            ->assertExitCode(0);
+    }
+
+    public function test_hides_missing_rules_warning_when_confirmed(): void
+    {
+        File::ensureDirectoryExists($this->tempDir.'/.git');
+        File::put($this->tempDir.'/.git/config', '');
+
+        // First run: expect warning and confirm to hide it
+        $this->artisan('generate')
+            ->expectsOutput('No rulesync.md file found globally or locally.')
+            ->expectsQuestion('Do you want to hide this warning in the future?', true)
+            ->assertExitCode(1);
+
+        // Second run: expect no warning
+        $this->artisan('generate')
+            ->doesntExpectOutput('No rulesync.md file found globally or locally.')
+            ->assertExitCode(1);
     }
 }
