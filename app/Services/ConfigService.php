@@ -94,6 +94,39 @@ class ConfigService
         $this->saveConfig();
     }
 
+    public function getWarnOnMissingGlobalRules(): bool
+    {
+        return $this->config['warn_on_missing_global_rules'] ?? true;
+    }
+
+    public function setWarnOnMissingGlobalRules(bool $warn): void
+    {
+        $this->config['warn_on_missing_global_rules'] = $warn;
+        $this->saveConfig();
+    }
+
+    public function getWarnOnMissingLocalRules(): bool
+    {
+        return $this->config['warn_on_missing_local_rules'] ?? true;
+    }
+
+    public function setWarnOnMissingLocalRules(bool $warn): void
+    {
+        $this->config['warn_on_missing_local_rules'] = $warn;
+        $this->saveConfig();
+    }
+
+    public function getWarnOnMissingRules(): bool
+    {
+        return $this->config['warn_on_missing_rules'] ?? true;
+    }
+
+    public function setWarnOnMissingRules(bool $warn): void
+    {
+        $this->config['warn_on_missing_rules'] = $warn;
+        $this->saveConfig();
+    }
+
     private function ensureConfigDirectoryExists(): void
     {
         $directory = dirname($this->configPath);
